@@ -53,6 +53,7 @@ def fetch_fotmob_team_data(fotmob_team_id):
 
 @st.cache_data  
 def load_match_data(whoscored_match_id):
+    st.write("Fetching match data...")
     try:
         scraper = cloudscraper.create_scraper(
             browser={
@@ -60,7 +61,11 @@ def load_match_data(whoscored_match_id):
                 'platform': 'windows',
                 'mobile': False
             },
-            delay=10
+            delay=10,
+            proxies={
+                'http': 'http://your_proxy:port',
+                'https': 'http://your_proxy:port',
+            }
         )
         
         # Daha fazla header ekleyelim
@@ -77,7 +82,8 @@ def load_match_data(whoscored_match_id):
             'Sec-Fetch-User': '?1',
             'Cache-Control': 'max-age=0',
             'DNT': '1',
-            'Referer': 'https://www.google.com/'
+            'Referer': 'https://www.google.com/',
+            'Upgrade-Insecure-Requests': '1'
         }
 
         # Daha uzun timeout süresi ve retry mekanizması ekleyelim
@@ -87,10 +93,11 @@ def load_match_data(whoscored_match_id):
                 response = scraper.get(
                     f'https://www.whoscored.com/Matches/{whoscored_match_id}/Live',
                     headers=headers,
-                    timeout=30
+                    timeout=60  # Timeout süresini artırdık
                 )
                 
                 if response.status_code == 200:
+                    st.write("Match data fetched successfully.")
                     return response.text
                 elif response.status_code == 403:
                     st.warning(f"Attempt {attempt + 1} of {max_retries} failed. Retrying...")
