@@ -4,17 +4,16 @@ import pandas as pd
 import cloudscraper
 from mplsoccer import add_image
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
 import os
 from matplotlib import font_manager as fm
 from PIL import Image
 from io import BytesIO
 import requests
 from datetime import datetime
-import matplotlib.patches as patches
 from matplotlib.patches import FancyArrowPatch
 from functions import *
 import io
+import time
 
 st.set_page_config(
     page_title="Match Analysis",
@@ -52,6 +51,7 @@ def fetch_fotmob_team_data(fotmob_team_id):
     fotmobTeamData = getFotmobTeamData(fotmob_team_id)
     return fotmobTeamData
 
+@st.cache_data  
 def load_match_data(whoscored_match_id):
     try:
         scraper = cloudscraper.create_scraper(
@@ -62,6 +62,8 @@ def load_match_data(whoscored_match_id):
             },
             delay=10
         )
+        
+        # Daha fazla header ekleyelim
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
@@ -72,20 +74,41 @@ def load_match_data(whoscored_match_id):
             'Sec-Fetch-Dest': 'document',
             'Sec-Fetch-Mode': 'navigate',
             'Sec-Fetch-Site': 'none',
-            'Sec-Fetch-User': '?1'
+            'Sec-Fetch-User': '?1',
+            'Cache-Control': 'max-age=0',
+            'DNT': '1',
+            'Referer': 'https://www.google.com/'
         }
-        response = scraper.get(
-            f'https://www.whoscored.com/Matches/{whoscored_match_id}/Live',
-            headers=headers,
-            timeout=30
-        )
-        if response.status_code == 200:
-            return response.text
-        else:
-            st.error(f"Failed to fetch data: Status code {response.status_code}")
-            return None
+
+        # Daha uzun timeout süresi ve retry mekanizması ekleyelim
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                response = scraper.get(
+                    f'https://www.whoscored.com/Matches/{whoscored_match_id}/Live',
+                    headers=headers,
+                    timeout=30
+                )
+                
+                if response.status_code == 200:
+                    return response.text
+                elif response.status_code == 403:
+                    st.warning(f"Attempt {attempt + 1} of {max_retries} failed. Retrying...")
+                    time.sleep(5 * (attempt + 1))  # Her denemede artan bekleme süresi
+                else:
+                    st.error(f"Failed to fetch data: Status code {response.status_code}")
+                    return None
+                    
+            except Exception as e:
+                if attempt == max_retries - 1:
+                    st.error(f"Error fetching match data after {max_retries} attempts: {e}")
+                    return None
+                time.sleep(5 * (attempt + 1))
+                
+        return None
+        
     except Exception as e:
-        st.error(f"Error fetching match data: {e}")
+        st.error(f"Error in load_match_data: {e}")
         return None
 
 # JSON verisini yükleme ve kontrol mekanizması
