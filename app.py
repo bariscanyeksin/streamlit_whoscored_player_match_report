@@ -61,11 +61,7 @@ def load_match_data(whoscored_match_id):
                 'platform': 'windows',
                 'mobile': False
             },
-            delay=10,
-            proxies={
-                'http': 'http://your_proxy:port',
-                'https': 'http://your_proxy:port',
-            }
+            delay=10
         )
         
         # Daha fazla header ekleyelim
