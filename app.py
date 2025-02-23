@@ -40,7 +40,6 @@ with st.sidebar:
     fotmob_match_id = st.number_input("Fotmob Match ID", value=4723946, help="Enter the match ID from Fotmob URL")
 
 # Fotmob verilerini çekmek için fonksiyon
-@st.cache_data
 def fetch_fotmob_data(fotmob_match_id):
     try:
         fotmobData = getFotmobData(fotmob_match_id)
@@ -49,12 +48,10 @@ def fetch_fotmob_data(fotmob_match_id):
         st.error(f"Error fetching Fotmob data: {e}")
         return None
 
-@st.cache_data
 def fetch_fotmob_team_data(fotmob_team_id):
     fotmobTeamData = getFotmobTeamData(fotmob_team_id)
     return fotmobTeamData
 
-@st.cache_data  
 def load_match_data(whoscored_match_id):
     try:
         scraper = cloudscraper.create_scraper(
