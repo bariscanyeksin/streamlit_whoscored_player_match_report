@@ -10,3 +10,4 @@ highlight_text
 functions
 selenium
 webdriver-manager
+playwright
