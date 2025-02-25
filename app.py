@@ -126,7 +126,6 @@ def fetch_fotmob_team_data(fotmob_team_id):
 @st.cache_data(ttl=600)
 
 # Function to install ChromeDriver
-@st.experimental_singleton
 def install_chrome():
     # Install dependencies and ChromeDriver for Streamlit Cloud
     os.system('apt-get update')
