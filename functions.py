@@ -487,6 +487,7 @@ def passes_and_key_passes(ax, selected_player_id, df):
     acc_pass = df_passes[df_passes['outcomeType']=='Successful']
     inac_pass = df_passes[df_passes['outcomeType']=='Unsuccessful']
     long_pass = df_passes[df_passes['qualifiers'].str.contains('Longball')]
+    long_pass_acc = long_pass[long_pass['outcomeType']=='Successful']
     # Savunma sahasının %40'ı: 105 metre uzunluğun %40'ı (42 metre)
     defending_zone_limit = 105 * 0.4  # 42 metre
 
@@ -530,31 +531,45 @@ def passes_and_key_passes(ax, selected_player_id, df):
     # KeyPass olanları filtrele
     df_key_passes = df_passes[df_passes['qualifiers'].str.contains('KeyPass')]
     df_big_chances_created = df_passes[df_passes['qualifiers'].str.contains('BigChanceCreated')]
+    df_assists = df_passes[df_passes['qualifiers'].str.contains('IntentionalGoalAssist')]
 
     pass_1 = pitch.lines(df_passes["x"], df_passes["y"], df_passes["endX"], df_passes["endY"],
                             ax=ax, lw=1, transparent=True, comet=True,
-                            label='All Passes', color=dark_gray, zorder=1)
+                            label='Key Passes', color=dark_gray, zorder=0)
     #pass_2 = ax.scatter(df_passes["endX"], df_passes["endY"], marker='o', s=50, c='blue')
     long_pass_1 = pitch.lines(long_pass["x"], long_pass["y"], long_pass["endX"], long_pass["endY"],
                             ax=ax, lw=1.5, transparent=True, comet=True,
                             label='Long Passes', color=green, zorder=1)
-    key_pass_1 = pitch.lines(df_key_passes["x"], df_key_passes["y"], df_key_passes["endX"], df_key_passes["endY"],
-                            ax=ax, lw=2.5, transparent=True, comet=True,
-                            label='Key Passes',color=blue, zorder=2)
-    key_pass_2 = pitch.scatter(df_key_passes["endX"], df_key_passes["endY"], marker='o', s=20, c=pitch_color, edgecolor=blue,linewidth=1,zorder=2, ax=ax)
     progressive_pass_1 = pitch.lines(pro_pass["x"], pro_pass["y"], pro_pass["endX"], pro_pass["endY"],
                             ax=ax, lw=2.5, transparent=True, comet=True,
-                            label='Progressive Passes',color=dark_yellow, zorder=3)
-    progressive_pass_2 = pitch.scatter(pro_pass["endX"], pro_pass["endY"], marker='o', s=20, c=pitch_color, edgecolor=dark_yellow,linewidth=1,zorder=3, ax=ax)
+                            label='Progressive Passes',color=dark_yellow, zorder=2)
+    progressive_pass_2 = pitch.scatter(pro_pass["endX"], pro_pass["endY"], marker='o', s=20, c=pitch_color, edgecolor=dark_yellow,linewidth=1,zorder=2, ax=ax)
+    key_pass_1 = pitch.lines(df_key_passes["x"], df_key_passes["y"], df_key_passes["endX"], df_key_passes["endY"],
+                            ax=ax, lw=2.5, transparent=True, comet=True,
+                            label='Key Passes',color=blue, zorder=3)
+    key_pass_2 = pitch.scatter(df_key_passes["endX"], df_key_passes["endY"], marker='o', s=20, c=pitch_color, edgecolor=blue,linewidth=1,zorder=3, ax=ax)
     big_chances_created_1 = pitch.lines(df_big_chances_created["x"], df_big_chances_created["y"], df_big_chances_created["endX"], df_big_chances_created["endY"],
                             ax=ax, lw=2.5, transparent=True, comet=True,
                             label='Big Chances Created Passes',color=orange, zorder=4)
     big_chances_created_2 = pitch.scatter(df_big_chances_created["endX"], df_big_chances_created["endY"], marker='o', s=20, c=pitch_color, edgecolor=orange,linewidth=1,zorder=4, ax=ax)
+    assists_1 = pitch.lines(df_assists["x"], df_assists["y"], df_assists["endX"], df_assists["endY"],
+                            ax=ax, lw=2.5, transparent=True, comet=True,
+                            label='Assists',color=purple, zorder=5)
+    assists_2 = pitch.scatter(df_assists["endX"], df_assists["endY"], marker='o', s=20, c=pitch_color, edgecolor=purple,linewidth=1,zorder=5, ax=ax)
     
     ax.set_title(f"Pas Haritası", color=line_color, fontproperties=bold_prop, fontweight='bold', y=1.05)
     
-    ax_text(0, -3, f'''<İsabetli Pas: {len(acc_pass)}/{len(df_passes)} ({accurate_pass_perc}%)> | <Uzun Pas: {len(long_pass)}> | <Kilit Pas: {len(df_key_passes)}>\n<Atak Geliştiren Pas: {len(pro_pass)}> | <Yaratılan Gol Fırsatı: {len(df_big_chances_created)}>
-    ''', color=line_color, highlight_textprops=[{'color':dark_gray}, {'color':green}, {'color':blue}, {'color':dark_yellow}, {'color':orange}], fontsize=12, ha='left', va='top', ax=ax, fontproperties=prop)
+    ax_text(0, -3, f'''<İsabetli Pas: {len(acc_pass)}/{len(df_passes)} ({accurate_pass_perc}%)> | <İsabetli Uzun Pas: {len(long_pass_acc)}/{len(long_pass)}>\n<Atak Geliştiren Pas: {len(pro_pass)}> | <Kilit Pas: {len(df_key_passes)}> | <Yaratılan Büyük Şans: {len(df_big_chances_created)}>\n<Asist: {len(df_assists)}>
+    ''', color=line_color, 
+    highlight_textprops=[
+    {'color':dark_gray},   # Accurate Passes (gray)
+    {'color':green},       # Acc. Long Passes (green)
+    {'color':dark_yellow}, # Progressive Passes (yellow)
+    {'color':blue},        # Key Passes (blue)
+    {'color':orange},       # Big Chances Created (orange)
+    {'color':purple}
+    ],
+    fontsize=12, ha='left', va='top', ax=ax, fontproperties=prop)
 
     return
 
@@ -606,8 +621,8 @@ def defensive_actions(ax, selected_player_id, df):
     tackle = playerdf[(playerdf['type']=='Tackle')]
     interception = playerdf[(playerdf['type']=='Interception')]
     ballRecovery = playerdf[playerdf['type']=='BallRecovery']
-    clearance = playerdf[playerdf['type']=='Clearance']
-    foul = playerdf[playerdf['type']=='Foul']
+    clearance = playerdf[(playerdf['type']=='Clearance') & (playerdf['endX']>0)]
+    foul = playerdf[(playerdf['type']=='Foul') & (playerdf['outcomeType']=='Unsuccessful')]
     aerial = playerdf[(playerdf['type']=='Aerial')]
     
     pitch.scatter(tackle['x'], tackle['y'], s=150, c=orange, lw=2.5, edgecolor=blue, marker='+', hatch='/////', ax=ax)
@@ -678,7 +693,7 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
     pitch = Pitch(pitch_type='uefa', pitch_color=pitch_color, line_color=line_color, goal_type='box', corner_arcs=True)
     pitch.draw(ax=ax)
     ax.set_xlim(-0.5,105.5)
-    #ax.set_ylim(-0.5,68.5)
+    ax.set_ylim(-0.5,68.5)
     plt.axis('off')
     
     goal_color = green
