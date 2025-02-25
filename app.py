@@ -142,7 +142,7 @@ def load_match_data(whoscored_match_id):
         )
 
         # Automatically install the correct ChromeDriver version
-        service = Service(ChromeDriverManager(version="114.0.5735.90").install())
+        service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
         # Open the URL
