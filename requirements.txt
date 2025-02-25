@@ -8,3 +8,4 @@ mplsoccer
 cloudscraper
 highlight_text
 functions
+selenium
