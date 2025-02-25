@@ -123,10 +123,9 @@ def fetch_fotmob_team_data(fotmob_team_id):
     return fotmobTeamData
 
 @st.cache_data(ttl=600)
+@st.experimental_singleton
 
 def load_match_data(whoscored_match_id):
-    st.write("Fetching match data...")
-
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
 
     try:
