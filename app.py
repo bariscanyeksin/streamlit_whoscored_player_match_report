@@ -125,23 +125,6 @@ def fetch_fotmob_team_data(fotmob_team_id):
 
 @st.cache_data(ttl=600)
 
-# Function to install ChromeDriver
-def install_chrome():
-    # Install dependencies and ChromeDriver for Streamlit Cloud
-    os.system('apt-get update')
-    os.system('apt-get install -y libxss1 libappindicator3-1 libindicator3-1 libnspr4 libnss3 libgdk-pixbuf2.0-0 libx11-xcb1 libgconf-2-4 libfontconfig1')
-    os.system('apt-get install -y chromium-driver')
-    # Ensure chromedriver is available globally
-    os.system('ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver')
-
-# Install ChromeDriver
-_ = install_chrome()
-
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
 
