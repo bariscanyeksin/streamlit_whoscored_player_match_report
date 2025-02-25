@@ -128,33 +128,14 @@ def fetch_fotmob_team_data(fotmob_team_id):
 
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
-
     try:
-        # Set up Chrome options
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Required for Streamlit Cloud
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Avoid bot detection
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("window-size=1920x1080")
-        chrome_options.add_argument(
-            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        )
-
-        # Automatically install the correct ChromeDriver version
-        service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
-        driver = webdriver.Chrome(service=service, options=chrome_options)
-
-        # Open the URL
-        driver.get(url)
-
-        # Get page content
-        page_content = driver.page_source
-        driver.quit()
-
-        return page_content
-
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)  # Headless modda tarayıcıyı başlat
+            page = browser.new_page()
+            page.goto(url, wait_until='domcontentloaded')  # Sayfa yüklendiğinde bekle
+            page_content = page.content()
+            browser.close()
+            return page_content
     except Exception as e:
         st.error(f"Unexpected error: {e}")
         return None
