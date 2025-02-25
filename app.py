@@ -132,9 +132,11 @@ def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)  # Launch the browser in headless mode
+            browser = p.chromium.launch(headless=True)  # Headless modda tarayıcıyı başlat
             page = browser.new_page()
-            page.goto(url)
+            page.set_user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+            time.sleep(2)  # 2 saniye bekle
+            page.goto(url, wait_until='domcontentloaded')  # Sayfa yüklendiğinde bekle
             page_content = page.content()
             browser.close()
             return page_content
