@@ -51,7 +51,6 @@ def fetch_fotmob_team_data(fotmob_team_id):
     fotmobTeamData = getFotmobTeamData(fotmob_team_id)
     return fotmobTeamData
 
-@st.cache_data  
 def load_match_data(whoscored_match_id):
     st.write("Fetching match data...")
     try:
@@ -63,7 +62,6 @@ def load_match_data(whoscored_match_id):
             },
             delay=10
         )
-        
         # Daha fazla header ekleyelim
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
