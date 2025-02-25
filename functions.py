@@ -678,7 +678,7 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
     pitch = Pitch(pitch_type='uefa', pitch_color=pitch_color, line_color=line_color, goal_type='box', corner_arcs=True)
     pitch.draw(ax=ax)
     ax.set_xlim(-0.5,105.5)
-    ax.set_ylim(-0.5,68.5)
+    #ax.set_ylim(-0.5,68.5)
     plt.axis('off')
     
     goal_color = green
@@ -687,7 +687,7 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
     miss_color = 'red'
     post_color = gray  # Direkten dönen şutlar koyu gri
         
-    player_shots = [shot for shot in shots_data if shot['playerId'] == fotmob_player_id]
+    player_shots = [shot for shot in shots_data if shot['playerId'] == int(fotmob_player_id)]
     
     if player_shots:
         # Seçilen oyuncunun şut haritasını çiz
