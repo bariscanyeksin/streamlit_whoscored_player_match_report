@@ -13,7 +13,10 @@ from datetime import datetime
 from matplotlib.patches import FancyArrowPatch
 from functions import *
 import io
-import time
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 st.set_page_config(
     page_title="Match Analysis",
@@ -30,6 +33,74 @@ prop = fm.FontProperties(fname=font_path)
 
 bold_font_path = os.path.join(current_dir, 'fonts', 'Poppins-SemiBold.ttf')
 bold_prop = fm.FontProperties(fname=bold_font_path)
+
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="cache"], [class*="st-"]  {
+    font-family: 'Poppins', sans-serif;
+}
+</style>
+""", unsafe_allow_html=True
+)
+
+st.markdown(
+"""
+<style>
+    /* Bilgisayarlar için */
+    @media (min-width: 1024px) {
+        .block-container {
+            width: 900px;
+            max-width: 900px;
+            padding-top: 50px;
+            padding-bottom: 0px;
+        }
+    }
+
+    /* Tabletler için (genellikle 768px - 1024px arası ekran genişliği) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .block-container.st-emotion-cache-13ln4jf.ea3mdgi5 {
+            width: 700px;
+            max-width: 700px;
+        }
+    }
+
+    /* Telefonlar için (genellikle 768px ve altı ekran genişliği) */
+    @media (max-width: 767px) {
+        .block-container.st-emotion-cache-13ln4jf.ea3mdgi5 {
+            width: 100%;
+            max-width: 100%;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    }
+    .stDownloadButton {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+    .stDownloadButton button {
+        background-color: rgba(51, 51, 51, 0.17);
+        color: gray;  /* Text color */
+        border: 0.5px solid gray;  /* Thin gray border */
+        transition: background-color 0.5s ease;
+    }
+    .stDownloadButton button:hover {
+        background-color: rgba(51, 51, 51, 0.65);
+        border: 1px solid gray;  /* Thin gray border */
+        color: gray;  /* Text color */
+    }
+    .stDownloadButton button:active {
+        background-color: rgba(51, 51, 51, 0.17);
+        color: gray;  /* Text color */
+        border: 0.5px solid gray;  /* Thin gray border */
+        transition: background-color 0.5s ease;
+    }
+</style>
+""",
+unsafe_allow_html=True
+)
 
 # Sidebar'da ID'leri al
 with st.sidebar:
@@ -51,92 +122,73 @@ def fetch_fotmob_team_data(fotmob_team_id):
     fotmobTeamData = getFotmobTeamData(fotmob_team_id)
     return fotmobTeamData
 
+@st.cache_data(ttl=600)
+
 def load_match_data(whoscored_match_id):
     st.write("Fetching match data...")
-    try:
-        scraper = cloudscraper.create_scraper(
-            browser={
-                'browser': 'chrome',
-                'platform': 'windows',
-                'mobile': False
-            },
-            delay=10
-        )
-        # Daha fazla header ekleyelim
-        headers = {
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-            'accept-language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
-            'cache-control': 'no-cache',
-            'pragma': 'no-cache',
-            'priority': 'u=0, i',
-            'sec-ch-ua': '"Not(A:Brand";v="99", "Google Chrome";v="133", "Chromium";v="133"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-            'upgrade-insecure-requests': '1',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
-            'cookie': '__cf_bm=e8.qs5ik_oMz_qhGN7Emv_qbf0Ygaq1P81V1T0cgEBE-1740483891-1.0.1.1-jbyb_yUZauRudDdYRTV2ctRJduJ1TLz82YpzXEYjVx3V7xQixxq7Ue6NS9NSOd.iYHaMw4mjGLS2IaLlaY.r6CAg2KHQe2tG8RrqebLkkRE',
-        }
 
-        # Daha uzun timeout süresi ve retry mekanizması ekleyelim
-        max_retries = 5
-        for attempt in range(max_retries):
-            try:
-                response = scraper.get(
-                    f'https://www.whoscored.com/Matches/{whoscored_match_id}/Live',
-                    headers=headers,
-                    timeout=60  # Timeout süresini artırdık
-                )
-                
-                if response.status_code == 200:
-                    st.write("Match data fetched successfully.")
-                    return response.text
-                elif response.status_code == 403:
-                    st.warning(f"Attempt {attempt + 1} of {max_retries} failed. Retrying...")
-                    time.sleep(5 * (attempt + 1))  # Her denemede artan bekleme süresi
-                else:
-                    st.error(f"Failed to fetch data: Status code {response.status_code}")
-                    return None
-                    
-            except Exception as e:
-                if attempt == max_retries - 1:
-                    st.error(f"Error fetching match data after {max_retries} attempts: {e}")
-                    return None
-                time.sleep(5 * (attempt + 1))
-                
-        return None
-        
+    url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
+
+    try:
+        # Set up Chrome options
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Required for Streamlit Cloud
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Avoid bot detection
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("window-size=1920x1080")
+        chrome_options.add_argument(
+            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        )
+
+        # Automatically install the correct ChromeDriver version
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+
+        # Open the URL
+        driver.get(url)
+
+        # Get page content
+        page_content = driver.page_source
+        driver.quit()
+
+        return page_content
+
     except Exception as e:
-        st.error(f"Error in load_match_data: {e}")
+        st.error(f"Unexpected error: {e}")
         return None
     
-if whoscored_match_id != "" and fotmob_match_id != "":
+if whoscored_match_id!="" and fotmob_match_id!="":
     # JSON verisini yükleme ve kontrol mekanizması
     response_text = load_match_data(whoscored_match_id)
 
-    json_data_txt = extract_json_from_html(response_text)
-
-    # Eğer JSON verisi None ise, tekrar deneme
-    retries = 3
-    while json_data_txt is None and retries > 0:
-        print("JSON verisi alınamadı. Yeniden deniyorum...")
-        response_text = load_match_data(whoscored_match_id)
+    if response_text:  # Check if response_text is not None
         json_data_txt = extract_json_from_html(response_text)
-        retries -= 1
 
-    if json_data_txt is None:
-        st.error("Maksimum deneme sayısına ulaşıldı. JSON verisi alınamadı.")
+        # Eğer JSON verisi None ise, tekrar deneme
+        retries = 3
+        while json_data_txt is None and retries > 0:
+            st.warning("JSON verisi alınamadı. Yeniden deniyorum...")
+            response_text = load_match_data(whoscored_match_id)
+            if response_text:  # Check if response_text is valid
+                st.write("Response text received on retry:")
+                st.code(response_text)  # Log the response text for debugging
+                json_data_txt = extract_json_from_html(response_text)
+            retries -= 1
+
+        if json_data_txt is None:
+            st.error("Maksimum deneme sayısına ulaşıldı. JSON verisi alınamadı.")
+        else:
+            try:
+                data = json.loads(json_data_txt)
+                event_types, events_dict, players_df, teams_dict, players_ids = extract_data_from_dict(data)
+                df = pd.DataFrame(events_dict)
+                df = df_manipulation(df)
+            except Exception as e:
+                st.error(f"Error processing JSON data: {e}")
     else:
-        try:
-            data = json.loads(json_data_txt)
-            event_types, events_dict, players_df, teams_dict, players_ids = extract_data_from_dict(data)
-            df = pd.DataFrame(events_dict)
-            df = df_manipulation(df)
-        except Exception as e:
-            st.error(f"Error processing JSON data: {e}")
+        st.error("Failed to fetch match data. Please check the match ID and try again.")
 
     # Kullanıcıdan alınan ID'lere göre verileri çek
     fotmobData = fetch_fotmob_data(fotmob_match_id)
