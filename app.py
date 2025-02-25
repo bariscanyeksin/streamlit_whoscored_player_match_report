@@ -13,6 +13,7 @@ from datetime import datetime
 from matplotlib.patches import FancyArrowPatch
 from functions import *
 import io
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
