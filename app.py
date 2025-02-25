@@ -142,11 +142,8 @@ def load_match_data(whoscored_match_id):
             "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         )
 
-        # Specify the path to the Chromium binary on Streamlit Cloud
-        chrome_options.binary_location = "/usr/bin/chromium-browser"
-
         # Automatically install the correct ChromeDriver version
-        service = Service(ChromeDriverManager().install())
+        service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
         # Open the URL
