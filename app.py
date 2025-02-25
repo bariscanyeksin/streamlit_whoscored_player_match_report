@@ -19,9 +19,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.os_manager import ChromeType
-from playwright.sync_api import sync_playwright
-
-os.system("selenium install")
 
 st.set_page_config(
     page_title="Match Analysis",
