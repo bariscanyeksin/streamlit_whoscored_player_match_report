@@ -20,6 +20,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.os_manager import ChromeType
 from playwright.sync_api import sync_playwright
 
+os.system("playwright install")
+
 st.set_page_config(
     page_title="Match Analysis",
     page_icon="⚽",
