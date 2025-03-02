@@ -9,3 +9,4 @@ cloudscraper
 highlight_text
 functions
 playwright
+selenium
