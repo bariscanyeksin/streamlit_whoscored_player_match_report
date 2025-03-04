@@ -144,16 +144,16 @@ def load_match_data(whoscored_match_id):
     try:
         with sync_playwright() as p:
             # Tarayıcıyı başlat
-            browser = p.chromium.launch(headless=True)  
+            browser = p.chromium.launch(headless=False)  # Headless=False yapalım (Cloudflare engellemesini aşmak için)
             
-            # User-Agent ile yeni bir tarayıcı oturumu aç
             context = browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                viewport={"width": 1920, "height": 1080}
             )
             page = context.new_page()
 
-            # Tarayıcı boyutunu ayarla
-            page.set_viewport_size({"width": 1920, "height": 1080})
+            # Playwright'ın tespit edilmesini önlemek için Stealth.js ekleyelim
+            page.add_init_script(path="stealth.min.js")
 
             # Sayfaya git → Timeout süresini 60 saniyeye çıkar
             page.goto(url, timeout=60000)  
