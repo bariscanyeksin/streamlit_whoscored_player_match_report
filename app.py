@@ -18,6 +18,8 @@ from playwright.sync_api import sync_playwright
 import tempfile
 import subprocess
 
+os.system("playwright install")
+
 st.set_page_config(
     page_title="Match Analysis",
     page_icon="⚽",
