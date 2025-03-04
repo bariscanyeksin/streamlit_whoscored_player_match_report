@@ -33,6 +33,14 @@ prop = fm.FontProperties(fname=font_path)
 bold_font_path = os.path.join(current_dir, 'fonts', 'Poppins-SemiBold.ttf')
 bold_prop = fm.FontProperties(fname=bold_font_path)
 
+def install_playwright():
+    try:
+        subprocess.run(["playwright", "install", "chromium"], check=True)
+    except subprocess.CalledProcessError:
+        print("Playwright yükleme başarısız oldu.")
+
+install_playwright()
+
 def install_playwright_deps():
     try:
         subprocess.run(["playwright", "install", "--with-deps"], check=True)
