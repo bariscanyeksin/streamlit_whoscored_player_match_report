@@ -126,7 +126,6 @@ def install_playwright_browsers():
     try:
         # Install Playwright browsers
         subprocess.check_call(["playwright", "install"])
-        st.write("Playwright browsers installed successfully.")
     except subprocess.CalledProcessError as e:
         st.write(f"Error installing Playwright browsers: {e}")
         raise
