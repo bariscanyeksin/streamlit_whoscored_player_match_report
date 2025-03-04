@@ -18,8 +18,6 @@ from playwright.sync_api import sync_playwright
 import tempfile
 import subprocess
 
-os.system("playwright install")
-
 st.set_page_config(
     page_title="Match Analysis",
     page_icon="⚽",
@@ -131,14 +129,6 @@ def install_playwright_browsers():
         st.write("Playwright browsers installed successfully.")
     except subprocess.CalledProcessError as e:
         st.write(f"Error installing Playwright browsers: {e}")
-        raise
-    
-    try:
-        # Install Playwright dependencies
-        subprocess.check_call(["playwright", "install-deps"])
-        st.write("Playwright dependencies installed successfully.")
-    except subprocess.CalledProcessError as e:
-        st.write(f"Error installing Playwright dependencies: {e}")
         raise
 
 def load_match_data(whoscored_match_id):
