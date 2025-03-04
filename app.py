@@ -148,14 +148,6 @@ def load_match_data(whoscored_match_id):
 
             page.goto(url)
 
-            # Wait for match center to be loaded
-            try:
-                page.wait_for_selector(".match-header", timeout=20000)  # Wait up to 20 seconds
-                st.write("Match center found.")
-            except Exception:
-                st.write("Match centre could not be found.")
-                return None
-
             # Get the page content
             page_content = page.content()
             
