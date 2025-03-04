@@ -168,6 +168,52 @@ def load_match_data(whoscored_match_id):
     except Exception as e:
         st.error(f"Unexpected error: {e}")
         return None
+
+@st.cache_data(ttl=600)
+def load_match_data(whoscored_match_id):
+    url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
+    try:
+        with sync_playwright() as p:
+            # Tarayıcıyı başlat
+            browser = p.chromium.launch(headless=True)  
+            
+            # User-Agent ile yeni bir tarayıcı oturumu aç
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            )
+            page = context.new_page()
+
+            # Tarayıcı boyutunu ayarla
+            page.set_viewport_size({"width": 1920, "height": 1080})
+
+            # Sayfaya git ve tüm ağ isteklerinin tamamlanmasını bekle
+            page.goto(url, wait_until="networkidle")  
+
+            # Cloudflare nedeniyle ek olarak bekleme süresi verelim
+            page.wait_for_timeout(3000)  # 3 saniye bekle
+
+            # Sayfadaki tüm script etiketlerini bul
+            scripts = page.query_selector_all("script")
+
+            # JSON içeren script tag'ini bul
+            json_data = None
+            for script in scripts:
+                script_text = script.inner_text()
+                if "matchCentreData" in script_text:  # JSON içeriğini bul
+                    json_data = script_text
+                    break
+
+            browser.close()
+
+            if json_data:
+                return page.content
+            else:
+                st.warning("JSON verisi bulunamadı, sayfa formatı değişmiş olabilir.")
+                return None
+
+    except Exception as e:
+        st.error(f"Unexpected error: {e}")
+        return None
     
 if whoscored_match_id!="" and fotmob_match_id!="":
     # JSON verisini yükleme ve kontrol mekanizması
