@@ -127,7 +127,7 @@ def fetch_fotmob_team_data(fotmob_team_id):
 def install_playwright_browsers():
     try:
         # Run the playwright install command in a subprocess
-        subprocess.check_call(["playwright", "install"])
+        subprocess.check_call(["playwright-devs", "install"])
         st.write("Playwright browsers installed successfully.")
     except subprocess.CalledProcessError as e:
         st.write(f"Error installing Playwright browsers: {e}")
