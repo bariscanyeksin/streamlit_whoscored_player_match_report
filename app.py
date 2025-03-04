@@ -14,9 +14,7 @@ from matplotlib.patches import FancyArrowPatch
 from functions import *
 import io
 import time
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from playwright.sync_api import sync_playwright
 import tempfile
 
 st.set_page_config(
@@ -126,46 +124,41 @@ def fetch_fotmob_team_data(fotmob_team_id):
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
     
-    driver = None
     try:
         # Create a unique temporary directory for user data using timestamp or random string
         temp_dir = tempfile.mkdtemp(prefix=f"whoscored_{int(time.time())}_")
         st.write(f"Temporary user data directory created: {temp_dir}")
-
-        options = webdriver.ChromeOptions()
-        options.add_argument(f'--user-data-dir={temp_dir}')  # Use a unique user data directory
-        options.add_argument('--headless')  # Optional: Run Chrome in headless mode
-
-        driver = webdriver.Chrome(options=options)
-
-        # Sayfaya git
-        st.write(f"Opening URL: {url}")
-        driver.get(url)
-
-        # Sayfa içindeki belirli bir öğenin yüklenmesini bekle
-        try:
-            match_center = WebDriverWait(driver, 20).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "match-centre"))
-            )
-            st.write("Match center found.")
-        except:
-            st.write("Match centre could not be found.")
-            return None
-
-        # Sayfa içeriğini al
-        page_content = driver.page_source
-        st.write("Page content loaded successfully.")
         
-        return page_content
+        # Start Playwright
+        with sync_playwright() as p:
+            # Launch browser with user data directory (similar to Chrome's --user-data-dir)
+            browser = p.chromium.launch_persistent_context(temp_dir, headless=True)  # Run headless
+            page = browser.new_page()
+
+            # Navigate to the URL
+            st.write(f"Opening URL: {url}")
+            page.goto(url)
+
+            # Wait for match center to be loaded
+            try:
+                page.wait_for_selector(".match-centre", timeout=20000)  # Wait up to 20 seconds
+                st.write("Match center found.")
+            except Exception:
+                st.write("Match centre could not be found.")
+                return None
+
+            # Get the page content
+            page_content = page.content()
+            st.write("Page content loaded successfully.")
+            
+            # Close browser
+            browser.close()
+            
+            return page_content
     
     except Exception as e:
         st.write(f"Unexpected error: {e}")
         return None
-    
-    finally:
-        # Tarayıcıyı kapat
-        if driver:
-            driver.quit()
     
 if whoscored_match_id!="" and fotmob_match_id!="":
     # JSON verisini yükleme ve kontrol mekanizması
