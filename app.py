@@ -161,24 +161,9 @@ def load_match_data(whoscored_match_id):
             # Cloudflare nedeniyle ek olarak bekleme süresi verelim
             page.wait_for_timeout(3000)  # 3 saniye bekle
 
-            # Sayfadaki tüm script etiketlerini bul
-            scripts = page.query_selector_all("script")
-
-            # JSON içeren script tag'ini bul
-            json_data = None
-            for script in scripts:
-                script_text = script.inner_text()
-                if "matchCentreData" in script_text:  # JSON içeriğini bul
-                    json_data = script_text
-                    break
-
+            page_content = page.content()
             browser.close()
-
-            if json_data:
-                return page.content
-            else:
-                st.warning("JSON verisi bulunamadı, sayfa formatı değişmiş olabilir.")
-                return None
+            return page_content
 
     except Exception as e:
         st.error(f"Unexpected error: {e}")
