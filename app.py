@@ -128,8 +128,8 @@ def load_match_data(whoscored_match_id):
     
     driver = None
     try:
-        # Create a temporary directory for user data
-        temp_dir = tempfile.mkdtemp()
+        # Create a unique temporary directory for user data using timestamp or random string
+        temp_dir = tempfile.mkdtemp(prefix=f"whoscored_{int(time.time())}_")
         st.write(f"Temporary user data directory created: {temp_dir}")
 
         options = webdriver.ChromeOptions()
