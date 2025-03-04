@@ -151,8 +151,8 @@ def load_match_data(whoscored_match_id):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         
-        # WebDriver başlatma
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+        # WebDriver başlatma, sadece options parametresini veriyoruz
+        driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
 
         # Sayfaya git
         driver.get(url)
