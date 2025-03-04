@@ -144,7 +144,7 @@ def load_match_data(whoscored_match_id):
         # Start Playwright
         with sync_playwright() as p:
             # Launch browser with user data directory (similar to Chrome's --user-data-dir)
-            browser = p.chromium.launch_persistent_context(temp_dir, headless=True)  # Run headless
+            browser = p.webkit.launch(temp_dir, headless=True)  # Run headless
             
             # Create a new context with a custom user agent
             user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
