@@ -122,7 +122,6 @@ def fetch_fotmob_team_data(fotmob_team_id):
     fotmobTeamData = getFotmobTeamData(fotmob_team_id)
     return fotmobTeamData
 
-@st.cache_data(ttl=600)
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
     
