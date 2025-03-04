@@ -25,6 +25,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"  # Sidebar'ı otomatik açık başlat
 )
 
+os.system("pytest-playwright install")
+os.system("playwright install")
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Poppins fontunu yükleme
