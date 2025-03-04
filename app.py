@@ -15,6 +15,7 @@ from functions import *
 import io
 import time
 from playwright.sync_api import sync_playwright
+import subprocess
 
 st.set_page_config(
     page_title="Match Analysis",
