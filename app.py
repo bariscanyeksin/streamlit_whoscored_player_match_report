@@ -130,7 +130,7 @@ def install_playwright_browsers():
         st.write(f"Error installing Playwright browsers: {e}")
         raise
 
-st.cache_data()
+@st.cache_data(ttl=600)
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
     
