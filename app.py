@@ -17,6 +17,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import tempfile
 
 st.set_page_config(
     page_title="Match Analysis",
