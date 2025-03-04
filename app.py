@@ -135,6 +135,7 @@ def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
     
     try:
+        # Install Playwright browsers
         install_playwright_browsers()
         
         # Create a unique temporary directory for user data using timestamp or random string
@@ -145,6 +146,10 @@ def load_match_data(whoscored_match_id):
             # Launch browser with user data directory (similar to Chrome's --user-data-dir)
             browser = p.chromium.launch_persistent_context(temp_dir, headless=True)  # Run headless
             page = browser.new_page()
+
+            # Set custom user agent
+            user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            page.set_user_agent(user_agent)
 
             page.goto(url)
 
