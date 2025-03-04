@@ -25,8 +25,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"  # Sidebar'ı otomatik açık başlat
 )
 
-os.system("playwright install-deps")
-
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Poppins fontunu yükleme
@@ -126,11 +124,19 @@ def fetch_fotmob_team_data(fotmob_team_id):
 
 def install_playwright_browsers():
     try:
-        # Run the playwright install command in a subprocess
-        subprocess.check_call(["playwright-deps", "install"])
+        # Install Playwright browsers
+        subprocess.check_call(["playwright", "install"])
         st.write("Playwright browsers installed successfully.")
     except subprocess.CalledProcessError as e:
         st.write(f"Error installing Playwright browsers: {e}")
+        raise
+    
+    try:
+        # Install Playwright dependencies
+        subprocess.check_call(["playwright", "install-deps"])
+        st.write("Playwright dependencies installed successfully.")
+    except subprocess.CalledProcessError as e:
+        st.write(f"Error installing Playwright dependencies: {e}")
         raise
 
 def load_match_data(whoscored_match_id):
