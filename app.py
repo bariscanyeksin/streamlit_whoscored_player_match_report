@@ -144,7 +144,7 @@ def load_match_data(whoscored_match_id):
     try:
         with sync_playwright() as p:
             # Tarayıcıyı başlat
-            browser = p.chromium.launch(headless=False)  # Headless=False yapalım (Cloudflare engellemesini aşmak için)
+            browser = p.chromium.launch(headless=True)  # Headless=False yapalım (Cloudflare engellemesini aşmak için)
             
             context = browser.new_context(
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
