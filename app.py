@@ -16,6 +16,7 @@ import io
 import time
 from playwright.sync_api import sync_playwright
 import tempfile
+import subprocess
 
 st.set_page_config(
     page_title="Match Analysis",
@@ -121,10 +122,21 @@ def fetch_fotmob_team_data(fotmob_team_id):
     fotmobTeamData = getFotmobTeamData(fotmob_team_id)
     return fotmobTeamData
 
+def install_playwright_browsers():
+    try:
+        # Run the playwright install command in a subprocess
+        subprocess.check_call(["playwright", "install"])
+        st.write("Playwright browsers installed successfully.")
+    except subprocess.CalledProcessError as e:
+        st.write(f"Error installing Playwright browsers: {e}")
+        raise
+
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
     
     try:
+        install_playwright_browsers()
+        
         # Create a unique temporary directory for user data using timestamp or random string
         temp_dir = tempfile.mkdtemp(prefix=f"whoscored_{int(time.time())}_")
         st.write(f"Temporary user data directory created: {temp_dir}")
