@@ -159,7 +159,7 @@ def load_match_data(whoscored_match_id):
             page.goto(url, timeout=60000)  
 
             # Sayfa içindeki belirli bir öğenin yüklenmesini bekle (örn. "match-header" class'ı)
-            page.wait_for_selector(".match-header", timeout=20000)
+            page.wait_for_selector(".match-centre", timeout=20000)
 
             # Cloudflare nedeniyle ek olarak bekleme süresi verelim
             time.sleep(3)  # 3 saniye bekle
