@@ -127,7 +127,14 @@ def load_match_data(whoscored_match_id):
     
     driver = None
     try:
-        driver = webdriver.Chrome()
+        # Create a temporary directory for user data
+        temp_dir = tempfile.mkdtemp()
+
+        options = webdriver.ChromeOptions()
+        options.add_argument(f'--user-data-dir={temp_dir}')  # Use a unique user data directory
+        options.add_argument('--headless')  # Optional: Run Chrome in headless mode
+
+        driver = webdriver.Chrome(options=options)
 
         # Sayfaya git
         driver.get(url)
@@ -138,7 +145,7 @@ def load_match_data(whoscored_match_id):
                 EC.presence_of_element_located((By.CLASS_NAME, "match-centre"))
             )
         except:
-            st.error("Match centre could not be found.")
+            print("Match centre could not be found.")
             return None
 
         # Sayfa içeriğini al
@@ -147,7 +154,7 @@ def load_match_data(whoscored_match_id):
         return page_content
     
     except Exception as e:
-        st.error(f"Unexpected error: {e}")
+        print(f"Unexpected error: {e}")
         return None
     
     finally:
