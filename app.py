@@ -18,6 +18,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 
 st.set_page_config(
     page_title="Match Analysis",
@@ -134,8 +135,9 @@ def load_match_data(whoscored_match_id):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         
-        # WebDriver başlatma, sadece options parametresini veriyoruz
-        driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
+        # WebDriver başlatma
+        service = Service(ChromeDriverManager().install())  # Service ile ChromeDriver'ı başlatıyoruz
+        driver = webdriver.Chrome(service=service, options=chrome_options)  # options parametresi ile başlatıyoruz
 
         # Sayfaya git
         driver.get(url)
