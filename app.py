@@ -129,7 +129,7 @@ def load_match_data(whoscored_match_id):
     try:
         # Create a temporary directory for user data
         temp_dir = tempfile.mkdtemp()
-        print(f"Temporary user data directory created: {temp_dir}")
+        st.write(f"Temporary user data directory created: {temp_dir}")
 
         options = webdriver.ChromeOptions()
         options.add_argument(f'--user-data-dir={temp_dir}')  # Use a unique user data directory
@@ -138,7 +138,7 @@ def load_match_data(whoscored_match_id):
         driver = webdriver.Chrome(options=options)
 
         # Sayfaya git
-        print(f"Opening URL: {url}")
+        st.write(f"Opening URL: {url}")
         driver.get(url)
 
         # Sayfa içindeki belirli bir öğenin yüklenmesini bekle
@@ -146,19 +146,19 @@ def load_match_data(whoscored_match_id):
             match_center = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "match-centre"))
             )
-            print("Match center found.")
+            st.write("Match center found.")
         except:
-            print("Match centre could not be found.")
+            st.write("Match centre could not be found.")
             return None
 
         # Sayfa içeriğini al
         page_content = driver.page_source
-        print("Page content loaded successfully.")
+        st.write("Page content loaded successfully.")
         
         return page_content
     
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        st.write(f"Unexpected error: {e}")
         return None
     
     finally:
