@@ -137,7 +137,10 @@ def load_match_data(whoscored_match_id):
         chrome_options.add_argument("--headless")  # Headless modda çalışması için
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-        
+
+        # Chrome binary yolunu belirleyin
+        chrome_options.binary_location = "/usr/bin/google-chrome"  # Linux için örnek bir yol, sizinki farklı olabilir
+
         # WebDriver başlatma
         service = Service(ChromeDriverManager().install())  # Service ile ChromeDriver'ı başlatıyoruz
         driver = webdriver.Chrome(service=service, options=chrome_options)  # options parametresi ile başlatıyoruz
@@ -150,7 +153,6 @@ def load_match_data(whoscored_match_id):
 
         # Sayfa içindeki belirli bir öğenin yüklenmesini bekle
         try:
-            # Burada WebDriverWait kullanarak "match-centre" öğesinin yüklenmesini bekliyoruz
             match_center = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "match-centre"))
             )
