@@ -15,10 +15,12 @@ from functions import *
 import io
 import time
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 st.set_page_config(
     page_title="Match Analysis",
@@ -124,9 +126,11 @@ def fetch_fotmob_team_data(fotmob_team_id):
     fotmobTeamData = getFotmobTeamData(fotmob_team_id)
     return fotmobTeamData
 
+@st.cache_data(ttl=600)
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
     
+    driver = None
     try:
         # Chrome Options ayarları
         chrome_options = Options()
@@ -146,23 +150,27 @@ def load_match_data(whoscored_match_id):
 
         # Sayfa içindeki belirli bir öğenin yüklenmesini bekle
         try:
-            match_center = driver.find_element(By.CLASS_NAME, "match-centre")
+            # Burada WebDriverWait kullanarak "match-centre" öğesinin yüklenmesini bekliyoruz
+            match_center = WebDriverWait(driver, 20).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "match-centre"))
+            )
         except:
             st.error("Match centre could not be found.")
-            driver.quit()
             return None
 
         # Sayfa içeriğini al
         page_content = driver.page_source
-        
-        # Tarayıcıyı kapat
-        driver.quit()
         
         return page_content
     
     except Exception as e:
         st.error(f"Unexpected error: {e}")
         return None
+    
+    finally:
+        # Tarayıcıyı kapat
+        if driver:
+            driver.quit()
     
 if whoscored_match_id!="" and fotmob_match_id!="":
     # JSON verisini yükleme ve kontrol mekanizması
