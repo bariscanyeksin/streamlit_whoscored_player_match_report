@@ -14,8 +14,11 @@ from matplotlib.patches import FancyArrowPatch
 from functions import *
 import io
 import time
-from playwright.sync_api import sync_playwright
 import subprocess
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 
 st.set_page_config(
     page_title="Match Analysis",
@@ -138,36 +141,41 @@ def fetch_fotmob_team_data(fotmob_team_id):
     return fotmobTeamData
 
 @st.cache_data(ttl=600)
-
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
+    
     try:
-        with sync_playwright() as p:
-            # Tarayıcıyı başlat
-            browser = p.chromium.launch(headless=True)  # Headless=False yapalım (Cloudflare engellemesini aşmak için)
-            
-            context = browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                viewport={"width": 1920, "height": 1080}
-            )
-            page = context.new_page()
+        # Chrome Options ayarları
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Headless modda çalışması için
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        
+        # WebDriver başlatma
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
 
-            # Playwright'ın tespit edilmesini önlemek için Stealth.js ekleyelim
-            page.add_init_script(path="stealth.min.js")
+        # Sayfaya git
+        driver.get(url)
 
-            # Sayfaya git → Timeout süresini 60 saniyeye çıkar
-            page.goto(url, timeout=60000)  
+        # Sayfanın tamamen yüklenmesini bekleyelim
+        driver.implicitly_wait(30)  # 30 saniye bekle
 
-            # Sayfa içindeki belirli bir öğenin yüklenmesini bekle (örn. "match-header" class'ı)
-            page.wait_for_selector(".match-centre", timeout=20000)
+        # Sayfa içindeki belirli bir öğenin yüklenmesini bekle
+        try:
+            match_center = driver.find_element(By.CLASS_NAME, "match-centre")
+        except:
+            st.error("Match centre could not be found.")
+            driver.quit()
+            return None
 
-            # Cloudflare nedeniyle ek olarak bekleme süresi verelim
-            time.sleep(3)  # 3 saniye bekle
-
-            page_content = page.content()
-            browser.close()
-            return page_content
-
+        # Sayfa içeriğini al
+        page_content = driver.page_source
+        
+        # Tarayıcıyı kapat
+        driver.quit()
+        
+        return page_content
+    
     except Exception as e:
         st.error(f"Unexpected error: {e}")
         return None
