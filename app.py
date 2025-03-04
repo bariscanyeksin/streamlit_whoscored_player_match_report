@@ -144,37 +144,6 @@ def load_match_data(whoscored_match_id):
     try:
         with sync_playwright() as p:
             # Tarayıcıyı başlat
-            browser = p.chromium.launch(headless=True)  # Headless modda tarayıcıyı başlat
-            
-            # User-Agent'ı ayarlamak için yeni bir sayfa oluştur
-            context = browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            )
-            page = context.new_page()
-
-            # Tarayıcı boyutunu ayarla
-            page.set_viewport_size({"width": 1920, "height": 1080})
-
-            # Sayfa yüklenmeden önce 2 saniye bekle
-            page.wait_for_timeout(2000)
-
-            # Sayfayı aç
-            page.goto(url, wait_until='domcontentloaded')  # Sayfa yüklendiğinde bekle
-
-            # Sayfa içeriğini al
-            page_content = page.content()
-            browser.close()
-            return page_content
-    except Exception as e:
-        st.error(f"Unexpected error: {e}")
-        return None
-
-@st.cache_data(ttl=600)
-def load_match_data(whoscored_match_id):
-    url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
-    try:
-        with sync_playwright() as p:
-            # Tarayıcıyı başlat
             browser = p.chromium.launch(headless=True)  
             
             # User-Agent ile yeni bir tarayıcı oturumu aç
