@@ -8,5 +8,5 @@ mplsoccer
 cloudscraper
 highlight_text
 functions
-playwright
+webdriver-manager
 selenium
