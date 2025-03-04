@@ -14,7 +14,6 @@ from matplotlib.patches import FancyArrowPatch
 from functions import *
 import io
 import time
-import subprocess
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
