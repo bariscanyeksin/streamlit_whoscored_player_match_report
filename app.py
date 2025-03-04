@@ -138,12 +138,10 @@ def load_match_data(whoscored_match_id):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
 
-        # Chrome binary yolunu belirleyin
-        chrome_options.binary_location = "/usr/bin/google-chrome"  # Linux için örnek bir yol, sizinki farklı olabilir
+        chrome_driver_path = "./drivers/chromedriver"
 
-        # WebDriver başlatma
-        service = Service(ChromeDriverManager().install())  # Service ile ChromeDriver'ı başlatıyoruz
-        driver = webdriver.Chrome(service=service, options=chrome_options)  # options parametresi ile başlatıyoruz
+        service = Service(chrome_driver_path)  # Service ile ChromeDriver'ı başlatıyoruz
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
         # Sayfaya git
         driver.get(url)
