@@ -155,11 +155,14 @@ def load_match_data(whoscored_match_id):
             # Tarayıcı boyutunu ayarla
             page.set_viewport_size({"width": 1920, "height": 1080})
 
-            # Sayfaya git ve tüm ağ isteklerinin tamamlanmasını bekle
-            page.goto(url, wait_until="networkidle")  
+            # Sayfaya git → Timeout süresini 60 saniyeye çıkar
+            page.goto(url, wait_until="load", timeout=60000)  
+
+            # Sayfa içindeki belirli bir öğenin yüklenmesini bekle (örn. "match-header" class'ı)
+            page.wait_for_selector(".match-header", timeout=20000)
 
             # Cloudflare nedeniyle ek olarak bekleme süresi verelim
-            page.wait_for_timeout(3000)  # 3 saniye bekle
+            time.sleep(3)  # 3 saniye bekle
 
             page_content = page.content()
             browser.close()
