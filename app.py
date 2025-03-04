@@ -156,7 +156,7 @@ def load_match_data(whoscored_match_id):
             page.set_viewport_size({"width": 1920, "height": 1080})
 
             # Sayfaya git → Timeout süresini 60 saniyeye çıkar
-            page.goto(url, wait_until="load", timeout=60000)  
+            page.goto(url, timeout=60000)  
 
             # Sayfa içindeki belirli bir öğenin yüklenmesini bekle (örn. "match-header" class'ı)
             page.wait_for_selector(".match-header", timeout=20000)
