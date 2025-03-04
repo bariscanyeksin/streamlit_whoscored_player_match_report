@@ -15,10 +15,6 @@ from functions import *
 import io
 import time
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -132,22 +128,10 @@ def load_match_data(whoscored_match_id):
     
     driver = None
     try:
-        # Chrome Options ayarları
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Headless modda çalışması için
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-
-        chrome_driver_path = "./drivers/chromedriver"
-
-        service = Service(chrome_driver_path)  # Service ile ChromeDriver'ı başlatıyoruz
-        driver = webdriver.Chrome(service=service, options=chrome_options)
+        driver = webdriver.Chrome()
 
         # Sayfaya git
         driver.get(url)
-
-        # Sayfanın tamamen yüklenmesini bekleyelim
-        driver.implicitly_wait(30)  # 30 saniye bekle
 
         # Sayfa içindeki belirli bir öğenin yüklenmesini bekle
         try:
