@@ -25,8 +25,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"  # Sidebar'ı otomatik açık başlat
 )
 
-os.system("playwright install")
-
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Poppins fontunu yükleme
@@ -141,7 +139,6 @@ def load_match_data(whoscored_match_id):
         
         # Create a unique temporary directory for user data using timestamp or random string
         temp_dir = tempfile.mkdtemp(prefix=f"whoscored_{int(time.time())}_")
-        st.write(f"Temporary user data directory created: {temp_dir}")
         
         # Start Playwright
         with sync_playwright() as p:
@@ -149,13 +146,11 @@ def load_match_data(whoscored_match_id):
             browser = p.chromium.launch_persistent_context(temp_dir, headless=True)  # Run headless
             page = browser.new_page()
 
-            # Navigate to the URL
-            st.write(f"Opening URL: {url}")
             page.goto(url)
 
             # Wait for match center to be loaded
             try:
-                page.wait_for_selector(".match-centre", timeout=20000)  # Wait up to 20 seconds
+                page.wait_for_selector(".match-header", timeout=20000)  # Wait up to 20 seconds
                 st.write("Match center found.")
             except Exception:
                 st.write("Match centre could not be found.")
@@ -163,7 +158,6 @@ def load_match_data(whoscored_match_id):
 
             # Get the page content
             page_content = page.content()
-            st.write("Page content loaded successfully.")
             
             # Close browser
             browser.close()
