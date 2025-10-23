@@ -82,14 +82,23 @@ unsafe_allow_html=True
 
 st.markdown("""
     <style>
-    span[data-baseweb="select"] {
+    .css-2b097c-container {
         color: white !important;
     }
-    .stSelectbox div[role="listbox"] > div {
+    .css-yk16xz-control {
+        background-color: #1e1e1e !important;
         color: white !important;
+    }
+    .css-1n7v3ny-option {
+        color: white !important;
+        background-color: #333 !important;
+    }
+    .css-1okebmr-indicatorSeparator {
+        display: none !important;
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 
 # Sidebar'da ID'leri al
@@ -399,6 +408,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
 
