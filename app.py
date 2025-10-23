@@ -80,6 +80,18 @@ st.markdown(
 unsafe_allow_html=True
 )
 
+st.markdown("""
+    <style>
+    span[data-baseweb="select"] {
+        color: white !important;
+    }
+    .stSelectbox div[role="listbox"] > div {
+        color: white !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
 # Sidebar'da ID'leri al
 with st.sidebar:
     st.title("Match Settings")
@@ -387,6 +399,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
 
