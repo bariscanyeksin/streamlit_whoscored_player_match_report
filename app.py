@@ -284,7 +284,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
                 formatted_date = parsed_date.strftime("%d.%m.%Y")
                 leagueName = general_data['leagueName']
                 leagueId = general_data['parentLeagueId']
-                leagueSeason = general_data['parentLeagueSeason']
+                leagueSeason = "2025/2026"
                 leagueString = f"{leagueName} - {leagueSeason}"
                 if "/" in week:
                     weekString = f"{week}  |  {formatted_date}"
@@ -409,3 +409,4 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
