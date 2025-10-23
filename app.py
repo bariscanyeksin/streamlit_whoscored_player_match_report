@@ -44,41 +44,6 @@ html, body  {
 """, unsafe_allow_html=True
 )
 
-st.markdown(
-"""
-<style>
-    /* Bilgisayarlar için */
-    @media (min-width: 1024px) {
-        .block-container {
-            width: 900px;
-            max-width: 900px;
-            padding-top: 50px;
-            padding-bottom: 0px;
-        }
-    }
-
-    /* Tabletler için (genellikle 768px - 1024px arası ekran genişliği) */
-    @media (min-width: 768px) and (max-width: 1023px) {
-        .block-container.st-emotion-cache-13ln4jf.ea3mdgi5 {
-            width: 700px;
-            max-width: 700px;
-        }
-    }
-
-    /* Telefonlar için (genellikle 768px ve altı ekran genişliği) */
-    @media (max-width: 767px) {
-        .block-container.st-emotion-cache-13ln4jf.ea3mdgi5 {
-            width: 100%;
-            max-width: 100%;
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-    }
-</style>
-""",
-unsafe_allow_html=True
-)
-
 # Sidebar'da ID'leri al
 with st.sidebar:
     st.title("Match Settings")
@@ -386,6 +351,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
 
