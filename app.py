@@ -38,7 +38,7 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-html, body, [class*="cache"], [class*="st-"]  {
+html, body  {
     font-family: 'Poppins', sans-serif;
 }
 </style>
@@ -74,31 +74,6 @@ st.markdown(
             padding-left: 10px;
             padding-right: 10px;
         }
-    }
-    .stDownloadButton {
-        display: flex;
-        justify-content: center;
-        text-align: center;
-    }
-    .stDownloadButton button {
-        background-color: rgba(51, 51, 51, 0.17);
-        color: gray;  /* Text color */
-        border: 0.5px solid gray;  /* Thin gray border */
-        transition: background-color 0.5s ease;
-    }
-    .stDownloadButton button:hover {
-        background-color: rgba(51, 51, 51, 0.65);
-        border: 1px solid gray;  /* Thin gray border */
-        color: gray;  /* Text color */
-    }
-    .stDownloadButton button:active {
-        background-color: rgba(51, 51, 51, 0.17);
-        color: gray;  /* Text color */
-        border: 0.5px solid gray;  /* Thin gray border */
-        transition: background-color 0.5s ease;
-    }
-    li[role="option"] {
-        color: white;  /* Text color */
     }
 </style>
 """,
@@ -239,7 +214,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
     ]
 
     # Oyuncu seçimi
-    selected_player_option = st.sidebar.selectbox(
+    selected_player_option = player_select_container.selectbox(
         "Select Player",
         options=player_options
     )
@@ -412,6 +387,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
 
