@@ -239,7 +239,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
     ]
 
     # Oyuncu seçimi
-    selected_player_option = player_select_container.selectbox(
+    selected_player_option = st.sidebar.selectbox(
         "Select Player",
         options=player_options
     )
@@ -412,6 +412,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
 
