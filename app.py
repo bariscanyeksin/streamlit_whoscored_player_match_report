@@ -225,7 +225,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
 
         # İlk oyuncuyu varsayılan olarak seç
         with st.sidebar:
-            selected_fotmob_player_name, selected_fotmob_player_id = st.selectbox("Select Player", player_options, format_func=lambda x: x[0], index=0)
+            selected_fotmob_player_name, selected_fotmob_player_id = st.selectbox("Select Fotmob Player", player_options, format_func=lambda x: x[0], index=0)
             # Fotmob verilerini tekrar çek
         fotmobData = fetch_fotmob_data(fotmob_match_id)
         
@@ -387,6 +387,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
 
