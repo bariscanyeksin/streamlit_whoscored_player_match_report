@@ -21,8 +21,7 @@ import subprocess
 st.set_page_config(
     page_title="Match Analysis",
     page_icon="⚽",
-    layout="wide",
-    initial_sidebar_state="expanded"  # Sidebar'ı otomatik açık başlat
+    layout="wide"
 )
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -387,6 +386,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
 
