@@ -97,7 +97,7 @@ st.markdown(
         border: 0.5px solid gray;  /* Thin gray border */
         transition: background-color 0.5s ease;
     }
-    div[data-baseweb="select"] {
+    li[role="option"] > div > div > div {
         color: white;  /* Text color */
     }
 </style>
@@ -412,5 +412,6 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
