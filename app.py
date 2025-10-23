@@ -25,6 +25,15 @@ st.set_page_config(
     initial_sidebar_state="expanded"  # Sidebar'ı otomatik açık başlat
 )
 
+st.markdown("""
+    <style>
+    html, body, [class*="css"]  {
+        color: #FFF !important;
+        background-color: #0E1117 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Poppins fontunu yükleme
@@ -79,27 +88,6 @@ st.markdown(
 """,
 unsafe_allow_html=True
 )
-
-st.markdown("""
-    <style>
-    .css-2b097c-container {
-        color: white !important;
-    }
-    .css-yk16xz-control {
-        background-color: #1e1e1e !important;
-        color: white !important;
-    }
-    .css-1n7v3ny-option {
-        color: white !important;
-        background-color: #333 !important;
-    }
-    .css-1okebmr-indicatorSeparator {
-        display: none !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-
 
 # Sidebar'da ID'leri al
 with st.sidebar:
@@ -408,6 +396,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
 
 
 
