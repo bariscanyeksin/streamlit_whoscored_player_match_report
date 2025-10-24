@@ -94,31 +94,42 @@ def load_match_data(whoscored_match_id):
         scraper.headers.update({
             'User-Agent': random.choice(USER_AGENTS),
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Encoding': 'gzip, deflate',
             'Accept-Language': 'en-US,en;q=0.9',
             'Referer': 'https://www.whoscored.com/'
         })
         return scraper
 
-    def fetch_whoscored_live_page(whoscored_match_id: int):
+    def fetch_whoscored_live_page():
         scraper = create_scraper()
         if RUNNING_IN_GITHUB:
-            time.sleep(random.uniform(1.2, 2.4))
-        try:
-            response = scraper.get(url, timeout=12)
-            if response.status_code in (403, 503):
-                print("[Warning] Cloudflare engeli algılandı.")
-                return None
+            time.sleep(random.uniform(1.2, 2.8))
 
-            html = response.text
-            return html
+        for attempt in range(3):
+            try:
+                resp = scraper.get(url, timeout=12)
+                if resp.status_code in (403, 503):
+                    print("[Warning] Cloudflare engeli algılandı. Tekrar deneniyor...")
+                    time.sleep(1.5)
+                    continue
 
-        except Exception as e:
-            print(f"[Fetch error] {e}")
-            return None
-        
-    match_data = fetch_whoscored_live_page(whoscored_match_id)
-    
+                html = resp.text
+
+                # Basit Cloudflare detektörü
+                if "cf-browser-verification" in html.lower():
+                    print("[Warning] Cloudflare HTML tespit edildi.")
+                    continue
+
+                # Başarılı
+                return html
+
+            except Exception as e:
+                print(f"[Fetch error] {e}")
+                time.sleep(1)
+
+        return None
+
+    match_data = fetch_whoscored_live_page()
     return match_data
     
 if whoscored_match_id!="" and fotmob_match_id!="":
@@ -365,3 +376,4 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
