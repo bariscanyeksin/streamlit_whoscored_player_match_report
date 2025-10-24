@@ -14,9 +14,8 @@ from matplotlib.patches import FancyArrowPatch
 from functions import *
 import io
 import time
-from playwright.sync_api import sync_playwright
-import tempfile
 import subprocess
+import random
 
 st.set_page_config(
     page_title="Match Analysis",
@@ -76,36 +75,51 @@ def install_playwright_browsers():
 def load_match_data(whoscored_match_id):
     url = f'https://www.whoscored.com/matches/{whoscored_match_id}/live'
     
-    try:
-        # Install Playwright browsers
-        install_playwright_browsers()
+    RUNNING_IN_GITHUB = os.environ.get("GITHUB_ACTIONS") == "true"
+
+    USER_AGENTS = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1 (KHTML, like Gecko) Version/17.2 Safari/605.1",
+        "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0"
+    ]
+
+    def create_scraper():
+        scraper = cloudscraper.create_scraper(
+            browser={
+                'browser': 'chrome',
+                'platform': 'windows',
+                'mobile': False
+            }
+        )
+        scraper.headers.update({
+            'User-Agent': random.choice(USER_AGENTS),
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://www.whoscored.com/'
+        })
+        return scraper
+
+    def fetch_whoscored_live_page(whoscored_match_id: int):
+        scraper = create_scraper()
+        if RUNNING_IN_GITHUB:
+            time.sleep(random.uniform(1.2, 2.4))
+        try:
+            response = scraper.get(url, timeout=12)
+            if response.status_code in (403, 503):
+                print("[Warning] Cloudflare engeli algılandı.")
+                return None
+
+            html = response.text
+            return html
+
+        except Exception as e:
+            print(f"[Fetch error] {e}")
+            return None
         
-        # Start Playwright
-        with sync_playwright() as p:
-            # Launch browser with user data directory (similar to Chrome's --user-data-dir)
-            browser = p.firefox.launch(headless=True)  # Run headless
-            
-            # Create a new context with a custom user agent
-            user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-            context = browser.new_context(user_agent=user_agent)
-            
-            # Create a new page in this context
-            page = context.new_page()
-
-            # Navigate to the URL
-            page.goto(url)
-
-            # Get the page content
-            page_content = page.content()
-            
-            # Close browser
-            browser.close()
-            
-            return page_content
+    match_data = fetch_whoscored_live_page(whoscored_match_id)
     
-    except Exception as e:
-        st.write(f"Unexpected error: {e}")
-        return None
+    return match_data
     
 if whoscored_match_id!="" and fotmob_match_id!="":
     # JSON verisini yükleme ve kontrol mekanizması
@@ -351,17 +365,3 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
