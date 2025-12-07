@@ -478,7 +478,7 @@ def passes_and_key_passes(ax, selected_player_id, df):
     
     playerdf.loc[:, 'qualifiers'] = playerdf['qualifiers'].fillna('')
     playerdf.loc[:, 'qualifiers'] = playerdf['qualifiers'].astype(str)
-    pass_events = playerdf[playerdf['type']=='Pass']
+    pass_events = playerdf[playerdf['type']=='Pass'].copy()
     pass_events = pass_events[~pass_events['qualifiers'].str.contains('ThrowIn|OppositeRelatedEvent')]
     # DataFrame'e dönüştürelim
     df_passes = pd.DataFrame(pass_events)
@@ -710,32 +710,32 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
             if shot['eventType'] == 'Goal':  # Gol olan şut
                 shot_color = goal_color
                 pitch.lines(shot['x'], shot['y'], 105, shot['goalCrossedY'], ax=ax, color=to_rgba(shot_color, alpha=0.5), lw=1)
-                pitch.scatter(shot['x'], shot['y'], ax=ax, c='None', s=round(shot['expectedGoals'], 2)*800, edgecolors=goal_color, marker='football', alpha=0.8)
+                pitch.scatter(shot['x'], shot['y'], ax=ax, c='None', s=round(shot['expectedGoals'], 2)*2000, edgecolors=goal_color, marker='football', alpha=0.8)
             
             elif shot['eventType'] == 'AttemptSaved' and shot['isBlocked'] == True and shot['expectedGoalsOnTarget'] == 0:  # Bloklanan şut
                 shot_color = blocked_color
                 pitch.lines(shot['x'], shot['y'], shot['blockedX'], shot['blockedY'], ax=ax, color=to_rgba(shot_color, alpha=0.5), lw=1)
-                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*800, edgecolors='white', marker='D', alpha=0.8, lw=0.7, hatch='|||||')
+                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*2000, edgecolors='white', marker='D', alpha=0.8, lw=0.7, hatch='|||||')
             
             elif shot['eventType'] == 'AttemptSaved' and shot['isBlocked'] == False and shot['expectedGoalsOnTarget'] > 0:  # İsabetli Şut | Kurtarılan şut
                 shot_color = saved_color
                 pitch.lines(shot['x'], shot['y'], shot['blockedX'], shot['blockedY'], ax=ax, color=to_rgba(shot_color, alpha=0.5), lw=1)
-                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*800, edgecolors='white', marker='o', alpha=0.8, lw=1, hatch='/////')
+                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*2000, edgecolors='white', marker='o', alpha=0.8, lw=1, hatch='/////')
             
             elif shot['eventType'] == 'Miss':  # İsabetsiz şut
                 shot_color = miss_color
                 pitch.lines(shot['x'], shot['y'], 105, shot['goalCrossedY'], ax=ax, color=to_rgba(shot_color, alpha=0.25), lw=1)
-                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*800, edgecolors='black', marker='x', alpha=0.8, lw=1)
+                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*2000, edgecolors='black', marker='x', alpha=0.8, lw=1)
             
             elif shot['eventType'] == 'Post':  # Direkten dönen şut
                 shot_color = post_color
                 pitch.lines(shot['x'], shot['y'], 105, shot['goalCrossedY'], ax=ax, color=to_rgba(shot_color, alpha=0.25), lw=1)
-                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*800, edgecolors='black', marker='+', alpha=0.8, lw=1, hatch='|')
+                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*2000, edgecolors='black', marker='+', alpha=0.8, lw=1, hatch='|')
             
             else:  # Bloklanan diğer şutlar
                 shot_color = blocked_color
                 pitch.lines(shot['x'], shot['y'], shot['blockedX'], shot['blockedY'], ax=ax, color=to_rgba(shot_color, alpha=0.5), lw=1)
-                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*800, edgecolors='black', marker='o', alpha=0.8, lw=1, hatch='/')
+                pitch.scatter(shot['x'], shot['y'], ax=ax, c=shot_color, s=round(shot['expectedGoals'], 2)*2000, edgecolors='black', marker='o', alpha=0.8, lw=1, hatch='/')
                 
         player_shots_df = pd.DataFrame(player_shots)
                 
@@ -811,3 +811,4 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
     ax.set_title(f"Şut Haritası", color=line_color, fontproperties=bold_prop, fontweight='bold', y=1.05)
     
     return
+
