@@ -533,6 +533,12 @@ def passes_and_key_passes(ax, selected_player_id, df):
     df_big_chances_created = df_passes[df_passes['qualifiers'].str.contains('BigChanceCreated')]
     df_assists = df_passes[df_passes['qualifiers'].str.contains('IntentionalGoalAssist')]
 
+    player_passes_df = df_passes.copy()
+    player_passes_df['pass_or_carry_angle'] = player_passes_df['pass_or_carry_angle'].abs()
+    player_passes_df = player_passes_df[(player_passes_df['pass_or_carry_angle']>=0) & (player_passes_df['pass_or_carry_angle']<=90)]
+    med_ang = player_passes_df['pass_or_carry_angle'].median()
+    verticality = round((1 - med_ang/90)*100, 2)
+
     pass_1 = pitch.lines(df_passes["x"], df_passes["y"], df_passes["endX"], df_passes["endY"],
                             ax=ax, lw=1, transparent=True, comet=True,
                             label='Key Passes', color=dark_gray, zorder=0)
@@ -559,17 +565,31 @@ def passes_and_key_passes(ax, selected_player_id, df):
     
     ax.set_title(f"Pas Haritası", color=line_color, fontproperties=bold_prop, fontweight='bold', y=1.05)
     
-    ax_text(0, -3, f'''<İsabetli Pas: {len(acc_pass)}/{len(df_passes)} ({accurate_pass_perc}%)> | <İsabetli Uzun Pas: {len(long_pass_acc)}/{len(long_pass)}>\n<Atak Geliştiren Pas: {len(pro_pass)}> | <Kilit Pas: {len(df_key_passes)}> | <Yaratılan Büyük Şans: {len(df_big_chances_created)}>\n<Asist: {len(df_assists)}>
-    ''', color=line_color, 
-    highlight_textprops=[
-    {'color':dark_gray},   # Accurate Passes (gray)
-    {'color':green},       # Acc. Long Passes (green)
-    {'color':dark_yellow}, # Progressive Passes (yellow)
-    {'color':blue},        # Key Passes (blue)
-    {'color':orange},       # Big Chances Created (orange)
-    {'color':purple}
-    ],
-    fontsize=12, ha='left', va='top', ax=ax, fontproperties=prop)
+    verticality_text = f"%{verticality:.2f}"
+    verticality_color = '#1E88E5'
+    
+    ax_text(
+        0, -3,
+        f'''<İsabetli Pas: {len(acc_pass)}/{len(df_passes)} ({accurate_pass_perc}%)> | 
+    <İsabetli Uzun Pas: {len(long_pass_acc)}/{len(long_pass)}> 
+    <Dikey Pas Oranı: {verticality_text}> <Progresif Pas: {len(pro_pass)}> | 
+    <Kilit Pas: {len(df_key_passes)}> | <Yaratılan Büyük Şans: {len(df_big_chances_created)}> 
+    <Asist: {len(df_assists)}>''',
+    
+        color=line_color,
+    
+        highlight_textprops=[
+            {'color': dark_gray},        # Accurate Passes
+            {'color': green},            # Acc. Long Passes
+            {'color': verticality_color},# Dikey Pas Oranı (yeni yeri)
+            {'color': dark_yellow},      # Progresif Pas
+            {'color': blue},             # Key Passes
+            {'color': orange},           # Big Chances Created
+            {'color': purple}            # Assists
+        ],
+    
+        fontsize=12, ha='left', va='top', ax=ax, fontproperties=prop
+    )
 
     return
 
@@ -811,4 +831,5 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
     ax.set_title(f"Şut Haritası", color=line_color, fontproperties=bold_prop, fontweight='bold', y=1.05)
     
     return
+
 
