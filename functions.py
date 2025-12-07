@@ -570,11 +570,10 @@ def passes_and_key_passes(ax, selected_player_id, df):
     
     ax_text(
         0, -3,
-        f'''<İsabetli Pas: {len(acc_pass)}/{len(df_passes)} ({accurate_pass_perc}%)> | 
-    <İsabetli Uzun Pas: {len(long_pass_acc)}/{len(long_pass)}> 
-    <Dikey Pas Oranı: {verticality_text}> <Progresif Pas: {len(pro_pass)}> | 
-    <Kilit Pas: {len(df_key_passes)}> | <Yaratılan Büyük Şans: {len(df_big_chances_created)}> 
-    <Asist: {len(df_assists)}>''',
+        f'''<İsabetli Pas: {len(acc_pass)}/{len(df_passes)} ({accurate_pass_perc}%)> | <İsabetli Uzun Pas: {len(long_pass_acc)}/{len(long_pass)}>\n
+        <Dikey Pas Oranı: {verticality_text}> | <Progresif Pas: {len(pro_pass)}>\n
+        <Kilit Pas: {len(df_key_passes)}> | <Yaratılan Büyük Şans: {len(df_big_chances_created)}>\n
+        <Asist: {len(df_assists)}>''',
     
         color=line_color,
     
@@ -831,5 +830,6 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
     ax.set_title(f"Şut Haritası", color=line_color, fontproperties=bold_prop, fontweight='bold', y=1.05)
     
     return
+
 
 
