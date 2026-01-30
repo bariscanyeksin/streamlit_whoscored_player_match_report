@@ -1,7 +1,7 @@
 pandas
 matplotlib
 Pillow
-streamlit
+streamlit>=1.52.0
 requests
 bs4
 mplsoccer
@@ -9,3 +9,4 @@ cloudscraper
 highlight_text
 functions
 playwright
+
