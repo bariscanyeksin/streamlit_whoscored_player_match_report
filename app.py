@@ -197,7 +197,10 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             fotmobPlayerStats = fotmobData['content']['playerStats']
             fotmobPlayerDf =  fotmobPlayerStats[str(selected_fotmob_player_id)]
             player_name = fotmobPlayerDf['name']
-            minutes = fotmobPlayerDf['stats'][0]['stats']['Minutes played']['stat']['value']
+            try:
+                minutes = fotmobPlayerDf['stats'][0]['stats']['Minutes played']['stat']['value']
+            except (KeyError, IndexError, TypeError):
+                minutes = "-"
             shots_data = fotmobData['content']['shotmap']['shots']
             
             def get_team_id_by_player_id(lineup_data, player_id):
@@ -351,3 +354,4 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.error("Failed to fetch match data. Please check the match ID and try again.")
     else:
         st.error("Failed to fetch Fotmob data. Please check the IDs and try again.")
+
