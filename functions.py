@@ -94,7 +94,7 @@ def create_xmas_header(url, password, version_number):
             return f"Error generating signature: {e}"
         
 def headers_matchDetails(match_id):
-    api_url = "/api/matchDetails?matchId=" + str(match_id)
+    api_url = "/api/data/matchDetails?matchId=" + str(match_id)
     xmas_value = create_xmas_header(api_url, xmas_pass, version_number)
     
     headers = {
@@ -827,6 +827,7 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
     ax.set_title(f"Şut Haritası", color=line_color, fontproperties=bold_prop, fontweight='bold', y=1.05)
     
     return
+
 
 
 
