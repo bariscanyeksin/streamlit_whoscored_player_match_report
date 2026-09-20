@@ -259,7 +259,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             dark_yellow = '#8a7512'
             gray = '#808080'
             dark_gray = '#626262'
-            purple = '#3a1878'
+            purple = '#642cc9'
             transparent_color = '#FFFFFF00'
             white_blue = '#c7ebf0'
             white_green = '#c7f0dd'
