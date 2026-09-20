@@ -246,7 +246,8 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             st.title("Match Analysis")
 
             # Renk tanımlamaları
-            pitch_color = '#d6c39f'
+            #pitch_color = '#d6c39f'
+            pitch_color = '#0f1629'
             line_color = '#0e1117'
             second_line_color = '#38435c'
             green = '#1e7818'
