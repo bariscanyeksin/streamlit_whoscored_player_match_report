@@ -309,7 +309,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
                         fig.text(0.2, 0.96, result_string, fontsize=34, fontweight='bold', ha='left', va='center', fontproperties=bold_prop, color=line_color)
                         fig.text(0.2, 0.92, matchDetailString, fontsize=18, ha='left', va='center', fontproperties=prop, color=line_color)
                         
-                        league_logo_url = f"https://images.fotmob.com/image_resources/logo/leaguelogo/{leagueId}.png"
+                        league_logo_url = f"https://images.fotmob.com/image_resources/logo/leaguelogo/dark/{leagueId}.png"
                         league_logo = Image.open(BytesIO(requests.get(league_logo_url).content)).convert("RGBA")
 
                         add_image(league_logo, fig, left=0.12, bottom=0.9, width=0.075, height=0.10)
