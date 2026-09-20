@@ -141,7 +141,7 @@ def headers_team(team_id):
 
 def getFotmobData(fotmob_match_id):
     try:
-        fotmob_match_url = f"https://www.fotmob.com/api/matchDetails?matchId={fotmob_match_id}"
+        fotmob_match_url = f"https://www.fotmob.com/api/data/matchDetails?matchId={fotmob_match_id}"
         fotmob_match_response = requests.get(fotmob_match_url, headers=headers_matchDetails(fotmob_match_id))
         fotmob_match_response.raise_for_status()  # HTTP hatalarını kontrol et
         fotmobData = fotmob_match_response.json()
