@@ -437,7 +437,7 @@ def match_details(ax, fotmob_player_id, team_name, player_name, selected_player_
 
     ax.text(x_center, y_center - 0.3, player_name, fontsize=player_fontsize, ha='center',
             color=line_color, fontproperties=bold_prop, zorder=3)
-    ax.text(x_center, y_center - 0.4, str(selected_player_number), fontsize=25,
+    ax.text(x_center, y_center - 0.41, str(selected_player_number), fontsize=25,
             ha='center', va='center', color=teamColor2, fontproperties=bold_prop, zorder=3)
     ax.text(x_center, y_center - 0.57, team_name, fontsize=18, ha='center',
             color=teamColor1, fontweight='bold', fontproperties=bold_prop, zorder=3)
