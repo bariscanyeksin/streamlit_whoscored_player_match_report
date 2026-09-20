@@ -117,7 +117,7 @@ def headers_matchDetails(match_id):
     return headers
 
 def headers_team(team_id):
-    api_url = "/api/teams?id=" + str(team_id)
+    api_url = "/api/data/teams?id=" + str(team_id)
     xmas_value = create_xmas_header(api_url, xmas_pass, version_number)
     
     headers = {
@@ -154,7 +154,7 @@ def getFotmobData(fotmob_match_id):
         return None
 
 def getFotmobTeamData(fotmob_team_id):
-    fotmob_match_url = f"https://www.fotmob.com/api/teams?id={fotmob_team_id}"
+    fotmob_match_url = f"https://www.fotmob.com/api/data/teams?id={fotmob_team_id}"
     fotmob_match_response = requests.get(fotmob_match_url, headers=headers_team(fotmob_team_id))
     fotmobData = fotmob_match_response.json()
     return fotmobData
