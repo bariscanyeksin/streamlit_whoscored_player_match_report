@@ -226,7 +226,7 @@ if whoscored_match_id!="" and fotmob_match_id!="":
             formatted_date = parsed_date.strftime("%d.%m.%Y")
             leagueName = general_data['leagueName']
             leagueId = general_data['parentLeagueId']
-            leagueSeason = "2025/2026"
+            leagueSeason = "2026/2027"
             leagueString = f"{leagueName} - {leagueSeason}"
             if "/" in week:
                 weekString = f"{week}  |  {formatted_date}"
