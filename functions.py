@@ -790,17 +790,17 @@ def shotmap(ax, selected_player_id, df, shots_data, fotmob_player_id):
         pitch.scatter(2,52.25-(3*spacing), s=130, marker='+', c=post_color, edgecolors='black', hatch='|', zorder=2, ax=ax) # Direkten Dönen Şut
         pitch.scatter(2,52.25-(4*spacing), s=100, marker='D', c=blocked_color, edgecolors='white', hatch='|||||', zorder=2, ax=ax) # Bloklanan Şut
         
-        ax.text(7,64-(0*spacing), f'Toplam Şut: {len(player_shots_df)}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(1*spacing), f'Akan Oyunda Şut: {len(openPlay)}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(2*spacing), f'Gol: {len(goal)}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(3*spacing), f'İsabetli Şut: {(len(saved))+(len(goal))}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(4*spacing), f'İsabetsiz Şut: {len(miss)}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(5*spacing), f'Direkten Dönen Şut: {len(post)}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(6*spacing), f'Engellenen Şut: {len(block)}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(7*spacing), f'Net Gol Fırsatı: {len(goal_bc)+len(miss_bc)+len(save_bc)+len(post_bc)}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(8*spacing), f'Kaçan Net Gol Fırsatı: {len(miss_bc)+len(save_bc)+len(post_bc)}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(9*spacing), f'xG: {xG}', fontsize=12, ha='left', va='center', fontproperties=prop)
-        ax.text(7,64-(10*spacing), f'xGOT: {xGOT}', fontsize=12, ha='left', va='center', fontproperties=prop)
+        ax.text(7,64-(0*spacing), f'Toplam Şut: {len(player_shots_df)}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(1*spacing), f'Akan Oyunda Şut: {len(openPlay)}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(2*spacing), f'Gol: {len(goal)}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(3*spacing), f'İsabetli Şut: {(len(saved))+(len(goal))}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(4*spacing), f'İsabetsiz Şut: {len(miss)}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(5*spacing), f'Direkten Dönen Şut: {len(post)}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(6*spacing), f'Engellenen Şut: {len(block)}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(7*spacing), f'Net Gol Fırsatı: {len(goal_bc)+len(miss_bc)+len(save_bc)+len(post_bc)}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(8*spacing), f'Kaçan Net Gol Fırsatı: {len(miss_bc)+len(save_bc)+len(post_bc)}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(9*spacing), f'xG: {xG}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
+        ax.text(7,64-(10*spacing), f'xGOT: {xGOT}', fontsize=12, ha='left', va='center', fontproperties=prop, c=line_color)
         
     else:
         spacing = 6  # Satırlar arası boşluk
