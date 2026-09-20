@@ -380,8 +380,11 @@ def list_players_and_get_selection_from_df(team_players, teams_dict, selected_pl
     
     return None, None, None, None, None
 
-pitch_color = '#d6c39f'
-line_color = '#0e1117'
+# Renk tanımlamaları
+#pitch_color = '#d6c39f'
+pitch_color = '#0E1117'
+#line_color = '#0e1117'
+line_color = '#8a95b5'
 second_line_color = '#38435c'
 green = '#1e7818'
 orange = '#ff5d44'
@@ -391,7 +394,7 @@ yellow = '#c2a51d'
 dark_yellow = '#8a7512'
 gray = '#808080'
 dark_gray = '#626262'
-purple = '#3a1878'
+purple = '#642cc9'
 transparent_color = '#FFFFFF00'
 white_blue = '#c7ebf0'
 white_green = '#c7f0dd'
